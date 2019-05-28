@@ -1,1 +1,1 @@
-for
+var stuff = 'for boom displace'

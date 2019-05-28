@@ -8,7 +8,7 @@ const path = require('path')
             patternArray.push(process.argv[i])
         }
     }
-
+console.log(patternArray)
 
 findCss = (filePath) =>{
     fs.readdir(filePath,(err,files)=>{
@@ -17,8 +17,7 @@ findCss = (filePath) =>{
         }
         else{
             files.forEach((el)=>{
-                const fileSplit = el.split('.')
-                if(fileSplit.length===1){
+                if(fs.statSync(path.join(filePath,el)).isDirectory()){
                     findCss(path.join(filePath,el))
                 }
                 else{
@@ -27,17 +26,21 @@ findCss = (filePath) =>{
                             console.log(err2)
                         }
                         else{
-                            const lineArray = file.toString().split('\n');
-                            for(let i=0; i<lineArray.length; i++){
-                                patternArray.forEach((pattern)=>{
-                                    
-                                    if(lineArray[i].indexOf(pattern)!==-1){
-                                        process.stdout.write('keyword: '+ pattern + ' file: ' +el + ', line number: '+ i + '\n')
-                                        
-                                    }
-                                })
+                            const strFile = file.toString()
+                            if(patternArray.every((pattern)=>strFile.indexOf(pattern)!==-1)){
+                                console.log('here')
+                                var lineArray = strFile.split('\n');
+                                
+                                for(let i=0; i<lineArray.length; i++){
+                                    patternArray.forEach((pattern)=>{
+                                        if(lineArray[i].indexOf(pattern) !== -1){
+                                            process.stdout.write('File: ' +el + ', ' +' keyword: '+ pattern + ', ' + ', line number: '+ i + '\n')
+                                        }
+                                    })
+                                }
                             }
                         }
+                        
                     })
                 }
             })

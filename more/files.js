@@ -1,1 +1,1 @@
-for
+var lines = 'for temple of doom'
